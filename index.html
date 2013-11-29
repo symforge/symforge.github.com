@@ -1,1 +1,435 @@
-<b>Symforge</b>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Ark by symforge</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/symforge">View On GitHub</a></li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Ark</h1>
+          <p>Ark' s Basic Documentation</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/symforge">symforge</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a name="welcome-to-symforges-ark" class="anchor" href="#welcome-to-symforges-ark"><span class="octicon octicon-link"></span></a>Welcome to Symforge's Ark</h1>
+
+<h2>
+<a name="what-is-ark" class="anchor" href="#what-is-ark"><span class="octicon octicon-link"></span></a>What is Ark?</h2>
+
+<p>Ark is ready-to-go multi functional and extendable Doctrine2 based database abstraction framework for who want to create fast CLI applications with multiple database handler. In basic, you only need <strong>Ark</strong> to create CLI/Web projects with Doctrine2 support**</p>
+
+<blockquote>
+<p>Ark is not only built for CLI but also for Web. You can use it with your Web Applications. Better, you can use Ark Bundles for Symfony2 and even you can use profiler to track database, package and service actions!</p>
+
+<p>Also, ArkBundle has exception feature that is sends full stack report to your email address with same as exception page of Symfony2...</p>
+</blockquote>
+
+<h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<p>Ark only support PHP 5.3.3 and later. Also, you need Console, Doctrine2 and YAML components. But you don't need to install them manually. Ark <strong>can do</strong> that via <strong>Composer</strong> ...</p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Via Composer (<a href="http://getcomposer.org" title="visit composer">http://getcomposer.org</a>):</p>
+
+<pre><code>{
+    "require": {
+        "symforge/ark": "~2.0"
+    }
+}
+</code></pre>
+
+<p>Or full automatically:</p>
+
+<pre><code>{
+    "require": {
+        "symforge/ark": "~2.0"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "Symforge\\Ark\\Build::buildParameters"
+        ],
+        "post-update-cmd": [
+            "Symforge\\Ark\\Build::buildParameters"
+        ]
+    }
+}
+</code></pre>
+
+<p>Now, Ark with requirements is installed. Need to create a project</p>
+
+<pre><code>$ vendor/bin/ark project:create 'Test App' cli
+</code></pre>
+
+<p>Now Test App with v1.0.0 for CLI is created. We also support <code>web</code> mode. In this case you need full stack Symfony2 with Ark Bundles.</p>
+
+<p>Type...</p>
+
+<pre><code>app/console list
+</code></pre>
+
+<p>...and you're got to go :) Your console app is ready with DB support.</p>
+
+<h1>
+<a name="database" class="anchor" href="#database"><span class="octicon octicon-link"></span></a>Database</h1>
+
+<h2>
+<a name="first-impression" class="anchor" href="#first-impression"><span class="octicon octicon-link"></span></a>First impression</h2>
+
+<p>Ark supports multiple database connections via Doctrine2 with dynamic declaration. For example, lets say you have 10 Mail Servers. In this case, DB is same but the IP' s/Credentials are different. With Ark, you can connect that 10 servers without loosing the control and existing database connections, Entities and Metadatas.</p>
+
+<p>With Doctrine2 itself, you have to provide this all servers in config file. In other example, with symfony2 you have to declare these databases with bundles and all database connections must be provided in doctrine.yml. No more!... Ark can do that dynamically inside of PHP.</p>
+
+<p>You can create database connections as much as you want and you can use Cache, Debug and full stack framework features that doctrine provides.</p>
+
+<p>Databases are managed by manually inside of your commands or can be managed via <strong>Packages</strong>. We will see Packages and Services later. Now, lets create a database Connection and entities/metadatas for it.</p>
+
+<h2>
+<a name="connect" class="anchor" href="#connect"><span class="octicon octicon-link"></span></a>Connect</h2>
+
+<p>Now, like config.php or config.yml, lets create our first reference server. You have to give Ark a reference server to create entities and metadatas from it. We will do this inside of <strong>ark.yml</strong>. This connection parameters <strong>ONLY</strong> used for creating entities. Nothing more. You will later, create a connection manually inside of your application based on these values as much as you want. Lets get started:</p>
+
+<p>Open <code>app/config/ark.yml</code> and locate <code>database</code> section (bottom)</p>
+
+<p>In first application creation a default database sample will be there in ark.yml.</p>
+
+<pre><code>...
+database:
+      ref_email:
+        driver:       pdo_mysql
+        host:         '127.0.0.1'
+        user:         root
+        password:     null
+        dbname:       mail_server
+        port:         3306
+        charset:      UTF8
+        namespace:    'Database\Email'
+        schema:       yml
+</code></pre>
+
+<blockquote>
+<p><strong>Note</strong>: You won't do this setting for all 10 servers. This is ONLY for creating Entities and Metadatas for your connections. Later, Ark discard this connections and use your dynamic connections. Nothing more ... So, this file is only intend for REFERENCE.</p>
+</blockquote>
+
+<p>Now. Let me explain this to you:</p>
+
+<ul>
+<li>
+<strong>ref_email</strong>: This is your connection name. When creating a package or reference it, you will use this name.</li>
+<li>
+<strong>driver</strong>: Which driver/adapter you want to use. Like pdo_pgsql etc...</li>
+<li>
+<strong>host</strong>: Host IP or localhost</li>
+<li>
+<strong>user</strong>: Database username</li>
+<li>
+<strong>password</strong>: Your password for this db</li>
+<li>
+<strong>dbname</strong>: Database name which contains tables.</li>
+<li>
+<strong>port</strong>: Port number</li>
+<li>
+<strong>charset</strong>: Charset for this db to connect and add/edit</li>
+<li>
+<strong>namespace</strong>: This namespace is required because, entities will be generated by this namespace and folders will be created by this namespace. This can be anything. But use same a-like prefix for every connection. Database\Email will contains all tables and entities inside. Basically, Email refer "Email Servers". Database refers nothing. It just a prefix that we used. It can be different. And it will created as src/Database/Email/. You can add more dirs/prefixes.</li>
+<li>
+<strong>schema</strong>: Which schema you want to generate metadatas and entities. Can be yml or xml or annotation.</li>
+<li>
+<strong>Ark</strong> supports schemas insaide of databases. They will created during entities and metadatas.</li>
+</ul><p>So, our connection set. Now lets create Entities and metadatas.</p>
+
+<pre><code>$ vendor/bin/ark database:generate:metadata ref_email
+</code></pre>
+
+<p>See, ref_email is used for reference and let ark to create entities for this connection.</p>
+
+<p>Now hit enter and metadatas will be created in <code>./src/Database/Email/ORM/</code></p>
+
+<p>Ok. Lets create Entities.</p>
+
+<pre><code>$ vendor/bin/ark database:generate:entities ref_email
+</code></pre>
+
+<p>Same again but this time entities. Okay, entities created in ./src/Database/Email/*.php</p>
+
+<p>At this point we don't need <code>ref_email</code> connection, even, we don't need ark.yml to read database :) Now, everything will be made in PHP.</p>
+
+<h2>
+<a name="creating-a-real-connection" class="anchor" href="#creating-a-real-connection"><span class="octicon octicon-link"></span></a>Creating a real connection</h2>
+
+<p>Create a command. I am passing this tutorial because you probably already now how to create Commands.</p>
+
+<p><strong>TestCommand.php:</strong></p>
+
+<pre><code>&lt;?php
+...
+use Doctrine\Common\Cache\ArrayCache;
+use Symforge\Ark\Component\Base\Engine;
+use Symforge\Ark\Component\Bridge\Connection;
+
+//Create engine instance
+$engine = new Engine();
+
+//Boot.
+$engine-&gt;boot(null, 'dev'); //null because kernel does not exist in cli. dev for development. Must be prod on production.
+
+//create database object
+$database = new Database($engine, new ArrayCache()); //ApcCache has no effect in CLI.
+
+$connection = new Connection();
+
+//This has nothing to do with ark.yml.
+$connection-&gt;setAdapter('pdo_mysql')
+        -&gt;setHost('127.0.0.1')
+        -&gt;setCharset('UTF8')
+        -&gt;setConnectionId(0)
+        -&gt;setConnectionName('email_server') // this is same like ref_email.
+        -&gt;setDatabaseName('email')
+        -&gt;setUserName('root')
+        -&gt;setSchema('xml')
+        -&gt;setNamespace('Database\\Email') //Namespace must be the same NS on ark.yml to find correct files!
+        -&gt;setUserPassword(null)
+        -&gt;setPort(3306);
+</code></pre>
+
+<blockquote>
+<p>Now, one thing you should be more careful: At the begining we are talked about multiple server connection at the same time. The above code is only intend to connect one server which is <strong>127.0.0.1.</strong></p>
+
+<p>We have to connect another server. So, we must change <code>setConnectionId(0)</code> to <code>setConnectionId(1).</code> This will create another instance :)</p>
+</blockquote>
+
+<p>It's time to add this connection to the container and get connect:</p>
+
+<pre><code>$database-&gt;add($connection);
+</code></pre>
+
+<p>Thats' it. Lets try some doctrine features.</p>
+
+<pre><code>$fetch = $database-&gt;getEntity('email', 0)-&gt;getRepository('Database\\Email\\Mailbox')-&gt;findAll();
+</code></pre>
+
+<p>Now, this is the hard way. Fortunately, we have <strong>Packages</strong> in Ark! With packages you can directly access entity and repository without giving its namespace and table name each time. Also, you can persist, merge and delete any data you want easily with packages.</p>
+
+<h2>
+<a name="packages" class="anchor" href="#packages"><span class="octicon octicon-link"></span></a>Packages</h2>
+
+<p>Lets create a package for email database:</p>
+
+<pre><code>$ vendor/bin/ark namespace connection
+</code></pre>
+
+<ul>
+<li>
+<strong>namespace</strong>: Namespace for package.</li>
+<li>
+<strong>connection</strong>: Connection name in your ark.yml reference.</li>
+</ul><p>So, lets create this file: <code>src/Package/WebMail/Email.php</code></p>
+
+<pre><code>$ vendor/bin/ark Package/WebMail/Email ref_email
+</code></pre>
+
+<p>Now, ref_email connection in our ark.yml will be referenced to this package. After, we will able to use the schema.</p>
+
+<blockquote>
+<p>Do not use packages as database bridges or methods. Instead, use them as container of modules. Every module is assigned to the package.</p>
+</blockquote>
+
+<h2>
+<a name="modules" class="anchor" href="#modules"><span class="octicon octicon-link"></span></a>Modules</h2>
+
+<p>Now, we've  created package. Not it is time to create a module. You will put everything inside of this module. Package will be the container of this module(s). One package can contain unlimited modules.</p>
+
+<blockquote>
+<p>Modules represent <strong>table</strong> and packages represent <strong>database</strong>.</p>
+</blockquote>
+
+<p>Create a module for previously created package (<em>Package/WebMail/Email</em>)</p>
+
+<p>File: <code>src/Package/WebMail/Email/Mailbox.php</code></p>
+
+<blockquote>
+<p>Don't get confused. Mailbox.php inside of Email folder. Email.php is the main package of this module. You probbably get confused. Let me clear; <code>A.php</code> is a <strong>package</strong> container and <code>A</code> <strong>folder</strong> contains modules belongs to <code>A.php</code>. Simple yay! :) Ah BTW, <code>WebMail</code> is tell us that this is web mail package. Thats all. You can add more names like <code>Package/My/Data/User/Bla/Bla/Email</code></p>
+</blockquote>
+
+<pre><code>$ vendor/bin/ark package:create:module package_name module_name --table=TableName
+</code></pre>
+
+<ul>
+<li>
+<strong>package_name</strong>: Previously created package namespace (fully qualified)</li>
+<li>
+<strong>module_name</strong>: Module name. Not a namespace. Usually it is equal to table name.</li>
+<li>
+<strong>--table=<em>TABLE</em></strong>: Table name. Not needed. But if used, then module will able to access this table directly </li>
+</ul><p>So we will do this:</p>
+
+<pre><code>$ vendor/bin/ark package:create:module Package/WebMail/Email Mailbox --table=mailbox
+</code></pre>
+
+<p>Now Mailbox.php created and all functions/methods will be able to access mailbox table inside of email connection.</p>
+
+<p>Lets declare a package dynamically:</p>
+
+<pre><code>$email = new Email(0); // 0 indicated connectionId(0)... If we type 1 this package will be used for server 1.
+
+$mailbox = $email-&gt;getMailbox();
+
+//This method inside of Mailbox.php
+public function test() {
+    $all = $this-&gt;getRepository()-&gt;findAll();
+    $one = $this-&gt;getRepository()-&gt;find(1);
+}
+
+$data = $mailbox-&gt;test();
+//That's all!
+</code></pre>
+
+<blockquote>
+<p>As you can see, getRepository() is immediately available inside of the Mailbox module. Because Package Email is belongs to <code>Email</code> database and this module belongs to <code>mailbox</code> table. So, we don't need to give all this information again. Ark knows who is who.</p>
+</blockquote>
+
+<h2>
+<a name="services" class="anchor" href="#services"><span class="octicon octicon-link"></span></a>Services</h2>
+
+<p>Services are depent on your environment. CLI or Bundle. For CLI it may not provide great opportunity but with Bundles it provides great way to implement your services. They are called once and you can -for example- create connections inside of services.</p>
+
+<p><strong>For Bundles:</strong></p>
+
+<pre><code>$ vendor/bin/ark service:create namespace --bundle=BundleNamespace
+</code></pre>
+
+<blockquote>
+<ul>
+<li>
+<strong>--bundle</strong> parameter is only used on Symfony2.</li>
+<li>
+<strong>--bundle</strong> will override oyur existing bundle and change your main bundle php file. Be aware!</li>
+</ul>
+</blockquote>
+
+<h2>
+<a name="boot-method" class="anchor" href="#boot-method"><span class="octicon octicon-link"></span></a>Boot method</h2>
+
+<p>Every package and every module has a boot() method. Thay are called once for every declaration. You can change them to work for you.</p>
+
+<h2>
+<a name="profiler" class="anchor" href="#profiler"><span class="octicon octicon-link"></span></a>Profiler</h2>
+
+<p><strong>Profiler</strong> is only enabled on Symfony2. Use ArkBundle, DatabaseBundle, PackageBundle and ServiceBundle for profiling.</p>
+
+<h1>
+<a name="git-features--dev" class="anchor" href="#git-features--dev"><span class="octicon octicon-link"></span></a>GIT Features (-Dev)</h1>
+
+<p>Ark provides some easy bridge to the Git. Please use <code>bin/ark list</code> to list all possible values.</p>
+
+<p>One feature is you can create any dir for git and add, commit and push them without entering that directory. Just use bin/ark command and preferences will be fetched from ark.yml. </p>
+
+<blockquote>
+<p>see ark.yml for more details.</p>
+</blockquote>
+
+<h2>
+<a name="add" class="anchor" href="#add"><span class="octicon octicon-link"></span></a>Add</h2>
+
+<pre><code>$ bin/ark git:add [files]
+</code></pre>
+
+<h2>
+<a name="commit" class="anchor" href="#commit"><span class="octicon octicon-link"></span></a>Commit</h2>
+
+<pre><code>$ bin/ark git commit 'message'
+</code></pre>
+
+<h2>
+<a name="push" class="anchor" href="#push"><span class="octicon octicon-link"></span></a>Push</h2>
+
+<pre><code>$ bin/ark git:push [branch]
+</code></pre>
+
+<h2>
+<a name="release" class="anchor" href="#release"><span class="octicon octicon-link"></span></a>Release</h2>
+
+<pre><code>$ bin/ark git:release
+</code></pre>
+
+<blockquote>
+<p>This will create a TAG for current version like v1.0.0. This version info cames from Ark.yml file.</p>
+</blockquote>
+
+<h2>
+<a name="remove" class="anchor" href="#remove"><span class="octicon octicon-link"></span></a>Remove</h2>
+
+<pre><code>$ bin/ark git:remove 1.0.0
+</code></pre>
+
+<blockquote>
+<p>This removes a tag.</p>
+</blockquote>
+
+<h1>
+<a name="important-notes" class="anchor" href="#important-notes"><span class="octicon octicon-link"></span></a>Important Notes</h1>
+
+<p><strong>Packages</strong> can be declared many times and can be profiled seperately.
+<strong>Services</strong> must be declared only once per instance and tracked one time only on profiling tools.</p>
+
+<h1>
+<a name="accessibilty" class="anchor" href="#accessibilty"><span class="octicon octicon-link"></span></a>Accessibilty</h1>
+
+<p>If you want to access Engine, you can access it by this:</p>
+
+<pre><code>&lt;?php
+use Symforge\Ark\Component\Base\Engine
+
+class IndexController extends Controller {
+    $engine = Engine::getInstance();
+}
+</code></pre>
+
+<p>Or. Alternatively you can extends to our custom controller.</p>
+
+<pre><code>&lt;?php
+use Symforge\Ark\Component\Extra\Controller;
+
+class IndexController extends Controller {
+    $engine = $this-&gt;getEngine();
+}
+</code></pre>
+
+<h1>
+<a name="contribute" class="anchor" href="#contribute"><span class="octicon octicon-link"></span></a>Contribute</h1>
+
+<p>Want to make this project <strong>better</strong> via adding more functions or so? Just drop a message to the issues page with your details.</p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
